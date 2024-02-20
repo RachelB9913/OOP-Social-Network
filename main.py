@@ -36,18 +36,18 @@ def main():
     # Creating sale post
     p3 = u3.publish_post("Sale", "Toyota prius 2012", 42000, "Haifa")
 
-    # Creating likes and comments
-    p2.like(u4)
-    p1.like(u4)
-    p1.like(u2)
-    p1.comment(u3, "Columbus's bold journey!")
-    p2.comment(u1, "So beautiful!")
-    p2.like(u1)
-    p2.like(u2)
-    p2.like(u5)
-    p1.comment(u5, "A pivotal moment")
-    p3.comment(u2, "Exorbitant price")
-    print()
+    # # Creating likes and comments
+    # p2.like(u4)
+    # p1.like(u4)
+    # p1.like(u2)
+    # p1.comment(u3, "Columbus's bold journey!")
+    # p2.comment(u1, "So beautiful!")
+    # p2.like(u1)
+    # p2.like(u2)
+    # p2.like(u5)
+    # p1.comment(u5, "A pivotal moment")
+    # p3.comment(u2, "Exorbitant price")
+    # print()
 
     # Price reduction of the product for sale
     p3.discount(10, "pass3")

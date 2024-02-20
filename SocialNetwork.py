@@ -7,7 +7,7 @@ class SocialNetwork:  # creates a Singleton
     all_users = {}  # dictionary
 
     def __new__(cls, name):
-        if not cls._instance:  # if SocialNetwork doesn't exist - create one
+        if cls._instance is None:  # if SocialNetwork doesn't exist - create one
             cls._instance = super().__new__(cls)
             print("The social network", name, "was created!")
         return cls._instance  # if it exists return the SocialNetwork
