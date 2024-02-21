@@ -1,25 +1,5 @@
-import Post
+import Post, Notification
 from abc import ABC, abstractmethod
-
-
-class Subject(ABC):
-    @abstractmethod
-    def register_observer(self, observer):
-        pass
-
-    @abstractmethod
-    def unregister_observer(self, observer):
-        pass
-
-    @abstractmethod
-    def notify_observers(self, notification):
-        pass
-
-
-class Observer(ABC):
-    @abstractmethod
-    def update(self, notification):
-        pass
 
 
 class User:
@@ -29,9 +9,13 @@ class User:
         self.__static_num_posts = 0
         self.__followers_list = []
         self.__notification_list = []
+        self.__isConnected = True
 
     def get_username(self):
         return self.__name
+
+    def add_note(self, new_note):
+        self.__notification_list.append(new_note)
 
     def get_password(self):
         return self.__password
@@ -45,29 +29,48 @@ class User:
     def get_followers_list(self):
         return self.__followers_list
 
+    def get_is_connected(self):
+        return self.__isConnected
+
+    def set_is_connected(self, is_connected):
+        self.__isConnected = is_connected
+
     def follow(self, user2):
-        # only if the user isn't already following the self user then add a follower
-        if user2 not in self.__followers_list:
-            print(self.__name + " started following " + user2.get_username())
-            self.__followers_list.append(user2)
-            # user2.register_observer(self)
+        if self.__isConnected:
+            # only if the user isn't already following the self user then add a follower
+            if self not in user2.__followers_list:
+                print(self.__name + " started following " + user2.get_username())
+                user2.__followers_list.append(self)
+            else:
+                print("you already follow " + user2.get_username())
+        else:
+            print("you are not connected")
 
     def unfollow(self, user2):
-        print(self.__name + " unfollowed " + user2.get_username())
-        self.__followers_list.remove(user2)
-        # user2.unregister_observer(self)
+        if self.__isConnected:
+            print(self.__name + " unfollowed " + user2.get_username())
+            user2.__followers_list.remove(self)
+        else:
+            print("you are not connected")
 
     def publish_post(self, post_type, *n):
-        factory = Post.PostFactory()
-        post = factory.create_post(self.__name, post_type, *n)
-        return post
-
-    def update(self, notification):
-        self.__notification_list.append(notification)
+        if self.__isConnected:
+            factory = Post.PostFactory()
+            post = factory.create_post(self, post_type, *n)
+            self.__static_num_posts += 1
+            return post
+        else:
+            print("you are not connected")
 
     def __str__(self):
-        return f"User name: {self.__name}, Number of posts: {self.__num_posts} , Number of followers: {len(self.__followers_list)}"
+        return (f"User name: {self.__name}, Number of posts: {self.__static_num_posts}, Number of followers: "
+                f"{len(self.__followers_list)}")
 
-    # def print_notifications(self):
-    #     for notification in self.notification_list:
-    #         print(notification)
+    def print_notifications(self):
+        print(f"{self.__name}'s notifications:")
+        for note in self.__notification_list:
+            print(note)
+
+    def notify_followers(self, note):
+        for user in self.__followers_list:
+            user.add_note(note)

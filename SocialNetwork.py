@@ -12,6 +12,9 @@ class SocialNetwork:  # creates a Singleton
             print("The social network", name, "was created!")
         return cls._instance  # if it exists return the SocialNetwork
 
+    def __init__(self, name):
+        self._name = name
+
     def get_name(self):
         return self._name
 
@@ -29,20 +32,27 @@ class SocialNetwork:  # creates a Singleton
         new_user = User(username, password)
         if len(password) >= 4 & len(password) <= 8:
             self.all_users[username] = new_user
+            new_user.set_is_connected(True)
             return new_user
 
-    def log_out(self, username):  # do I suppose to remove the user from the network?
-        print(username + " disconnected")
+    def log_out(self, username):
+        for users in self.all_users.keys():
+            if users is username:
+                new_user = self.all_users[username]
+                print(username + " disconnected")
+                new_user.set_is_connected(False)
 
     def log_in(self, username, password):
-        if username in self.all_users:  # is it needed? if yes - change to for?
-            print(username + " connected")
+        for users in self.all_users.keys():
+            if users is username and password is self.all_users[username].get_password():
+                new_user = self.all_users[username]
+                print(username + " connected")
+                new_user.set_is_connected(True)
 
-
-# class Post:
-#     def __init__(self, sug, content):
-#         self.type = sug
-#         self.content = content
-
-
-# אני מגזימה???
+    def __str__(self):
+        the_network = f"{self.get_name()} social network:\n"
+        for users in self.all_users.keys():
+            new_user = self.all_users[users]
+            the_user = f"{self.all_users[users].__str__()}\n"
+            the_network += the_user
+        return the_network
