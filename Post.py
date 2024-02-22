@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 from PIL import Image
-import User
 
 
 class Post(ABC):
@@ -16,7 +15,7 @@ class Post(ABC):
                 note = Notification(user.get_username(), "liked your post")
                 self.user.add_note(note)
         else:
-            print("you are not connected")
+            raise Exception(user.get_username() + " is disconnected. Please log in and then send a like")
 
     def comment(self, user, the_comm):
         if user.get_is_connected():
@@ -25,7 +24,7 @@ class Post(ABC):
                 note = Notification(user.get_username(), "commented on your post")
                 self.user.add_note(note)
         else:
-            print("you are not connected")
+            raise Exception(user.get_username() + " is disconnected. Please log in and then send a comment")
 
     @abstractmethod
     def __str__(self):
@@ -73,19 +72,23 @@ class SalePost(Post):
 
     def discount(self, percent, password):
         if self.user.get_is_connected():
-            if self.user.get_password() == password and self.available:
+            if self.user.get_password() is password and self.available:
                 self.price = (self.price*(100-percent))/100
                 print(f"Discount on {self.user.get_username()} product! the new price is: {self.price}")
+            else:
+                raise Exception("either the password is incorrect or the item is unavailable - please check")
         else:
-            print("you are not connected")
+            raise Exception(self.user.get_username() + " is disconnected. Please log in and then do the changes")
 
     def sold(self, password):
         if self.user.get_is_connected():
             if self.user.get_password() == password and self.available:
                 print(f"{self.user.get_username()}'s product is sold")
                 self.available = False
+            else:
+                raise Exception("either the password is incorrect or the item is unavailable - please check")
         else:
-            print("you are not connected")
+            raise Exception(self.user.get_username() + " is disconnected. Please log in and then do the changes")
 
     def __str__(self):
         if self.available:

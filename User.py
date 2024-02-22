@@ -1,5 +1,4 @@
-import Post, Notification
-from abc import ABC, abstractmethod
+import Post
 
 
 class User:
@@ -42,16 +41,19 @@ class User:
                 print(self.__name + " started following " + user2.get_username())
                 user2.__followers_list.append(self)
             else:
-                print("you already follow " + user2.get_username())
+                raise Exception("you already follow " + user2.get_username())
         else:
-            print("you are not connected")
+            raise Exception(self.get_username() + " is disconnected. Please log in to follow " + user2.get_username())
 
     def unfollow(self, user2):
         if self.__isConnected:
-            print(self.__name + " unfollowed " + user2.get_username())
-            user2.__followers_list.remove(self)
+            if self in user2.__followers_list:
+                print(self.__name + " unfollowed " + user2.get_username())
+                user2.__followers_list.remove(self)
+            else:
+                raise Exception("you are not following " + user2.get_username())
         else:
-            print("you are not connected")
+            raise Exception(self.get_username() + " is disconnected. Please log in to unfollow " + user2.get_username())
 
     def publish_post(self, post_type, *n):
         if self.__isConnected:
@@ -60,7 +62,7 @@ class User:
             self.__static_num_posts += 1
             return post
         else:
-            print("you are not connected")
+            raise Exception(self.get_username() + " is disconnected. Please log in to publish a post")
 
     def __str__(self):
         return (f"User name: {self.__name}, Number of posts: {self.__static_num_posts}, Number of followers: "
