@@ -2,6 +2,11 @@ from User import User
 
 
 class SocialNetwork:  # creates a Singleton
+    """the Social Network class is a singleton which means there can be only one instance of this class. this is why
+    we will create a new network only if there is not one existing. if there is one and someone will try to create
+    another one it will just lead him to the existing instance of it.
+    this class includes different simple function as sign up, log in, log out and the option to print the data about
+    the network. if a user tries to do something not as needed, it'll throw an exception"""
     __name = None
     __instance = None
     all_users = dict()  # dictionary
@@ -18,17 +23,8 @@ class SocialNetwork:  # creates a Singleton
     def get_name(self):
         return self.__name
 
-    def get_all_users(self):
-        return self.all_users
-
-    def print(self):
-        print(self.get_name() + " social network:")
-        for users in self.all_users.values():
-            print(self.all_users.values())
-
-    '''sign up function - gets a name and a password - if the password is 4 to 8 characters long
-         create the user and add it to the user dictionary of the network'''
-
+    """sign up function - gets a name and a password - if the password is 4 to 8 characters long
+         create the user and add it to the user dictionary of the network"""
     def sign_up(self, username, password):
         if username not in self.all_users:
             if 4 <= len(password) <= 8:
@@ -54,8 +50,8 @@ class SocialNetwork:  # creates a Singleton
     def log_in(self, username, password):
         if username in self.all_users:
             if not self.all_users[username].get_is_connected() and password is self.all_users[username].get_password():
-                    print(username + " connected")
-                    self.all_users[username].set_is_connected(True)
+                print(username + " connected")
+                self.all_users[username].set_is_connected(True)
             else:
                 raise Exception(username + " is already connected or check the password")
         else:
@@ -64,7 +60,6 @@ class SocialNetwork:  # creates a Singleton
     def __str__(self):
         the_network = f"{self.get_name()} social network:\n"
         for users in self.all_users.keys():
-            new_user = self.all_users[users]
             the_user = f"{self.all_users[users].__str__()}\n"
             the_network += the_user
         return the_network
